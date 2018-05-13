@@ -1,7 +1,5 @@
 package com.dt.betting.db.repository.inmemory;
 
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,9 +17,7 @@ public class UserDataRepositoryTest {
 	public void setUp() {
 		userDataRepository = new UserDataRepository();
 		Whitebox.setInternalState(userDataRepository, "idGenerator", Mockito.mock(IdGenerator.class));
-
 	}
-
 
 	@Test
 	public void testAddUser() {
@@ -34,12 +30,5 @@ public class UserDataRepositoryTest {
 		// then
 		Assert.assertNotNull(actualUser);
 		Assert.assertEquals(userName, actualUser.getName());
-	}
-
-	private User createTestUser() {
-		User user = new User();
-		user.setId(0L);
-		user.setName("testUser");
-		return user;
 	}
 }
