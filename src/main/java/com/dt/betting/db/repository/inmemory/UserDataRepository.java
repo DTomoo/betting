@@ -13,7 +13,6 @@ public class UserDataRepository extends InMemoryDataRepository<User> {
 
 	private User createUser(String name) {
 		User user = new User();
-		user.setId(idGenerator.createId(User.class));
 		user.setName(name);
 		return user;
 	}

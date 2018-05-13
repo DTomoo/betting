@@ -7,24 +7,14 @@ import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Match implements DomainObject<Match> {
+public class Match extends DomainObject<Match> {
 
-	private Long id = -1L;
 	private Team team1 = new Team();
 	private Team team2 = new Team();
 	private LocalDateTime localDateTime = LocalDateTime.now();
 	private boolean ended;
 	private GameStatistics gameStatistics = new GameStatistics();
 	private final List<Bet> bets = new ArrayList<>();
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}	
 
 	public Team getTeam1() {
 		return team1;
@@ -99,18 +89,6 @@ public class Match implements DomainObject<Match> {
 			if (other.team2.getId() != null)
 				return false;
 		} else if (!team2.getId().equals(other.team2.getId()))
-			return false;
-		return true;
-	}
-
-	@Override
-	public boolean equalsId(Match data) {
-		if (data == null)
-			return false;
-		if (id == null) {
-			if (data.id != null)
-				return false;
-		} else if (!id.equals(data.id))
 			return false;
 		return true;
 	}

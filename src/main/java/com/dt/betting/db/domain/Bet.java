@@ -3,21 +3,11 @@ package com.dt.betting.db.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Bet implements DomainObject<Bet> {
+public class Bet extends DomainObject<Bet> {
 
-	private Long id;
 	private int score1;
 	private int score2;
 	private User owner;
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public int getScore1() {
 		return score1;
@@ -74,18 +64,6 @@ public class Bet implements DomainObject<Bet> {
 		if (score1 != other.score1)
 			return false;
 		if (score2 != other.score2)
-			return false;
-		return true;
-	}
-
-	@Override
-	public boolean equalsId(Bet data) {
-		if (data == null)
-			return false;
-		if (id == null) {
-			if (data.id != null)
-				return false;
-		} else if (!id.equals(data.id))
 			return false;
 		return true;
 	}

@@ -13,7 +13,6 @@ public class TeamDataRepository extends InMemoryDataRepository<Team> {
 
 	private Team createTeam(String name) {
 		Team team = new Team();
-		team.setId(idGenerator.createId(Team.class));
 		team.setName(name);
 		addData(team);
 		return team;

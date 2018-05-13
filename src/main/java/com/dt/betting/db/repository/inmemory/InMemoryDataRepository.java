@@ -11,7 +11,7 @@ import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.repository.DataRepository;
 
 @Component
-abstract class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepository<T> {
+class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepository<T> {
 
 	@Autowired
 	protected IdGenerator idGenerator;
@@ -20,6 +20,8 @@ abstract class InMemoryDataRepository<T extends DomainObject<T>> implements Data
 
 	@Override
 	public T addData(T data) {
+		data.setId(idGenerator.createId(data.getClass()));
+
 		innerList.add(data);
 		return data;
 	}

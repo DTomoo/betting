@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.DomainObject;
+import com.dt.betting.db.domain.IdGenerator;
 
 public class InMemoryDataRepositoryTest {
 
@@ -16,8 +17,8 @@ public class InMemoryDataRepositoryTest {
 
 	@Before
 	public void setUp() {
-		inMemoryDataRepository = new InMemoryDataRepository<TestObject>() {
-		};
+		inMemoryDataRepository = new InMemoryDataRepository<TestObject>();
+		Whitebox.setInternalState(inMemoryDataRepository, "idGenerator", Mockito.mock(IdGenerator.class));
 	}
 
 	@Test
@@ -50,16 +51,6 @@ public class InMemoryDataRepositoryTest {
 		Assert.assertEquals(innerList, actualObjectList);
 	}
 
-	private static class TestObject implements DomainObject<TestObject> {
-
-		@Override
-		public Long getId() {
-			return null;
-		}
-
-		@Override
-		public boolean equalsId(TestObject data) {
-			return false;
-		}
+	private static class TestObject extends DomainObject<TestObject> {
 	}
 }

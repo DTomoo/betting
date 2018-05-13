@@ -3,19 +3,9 @@ package com.dt.betting.db.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-public class Team implements DomainObject<Team> {
+public class Team extends DomainObject<Team> {
 
-	private Long id = -1L;
 	private String name = "?";
-
-	@Override
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -46,18 +36,6 @@ public class Team implements DomainObject<Team> {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
-			return false;
-		return true;
-	}
-
-	@Override
-	public boolean equalsId(Team data) {
-		if (data == null)
-			return false;
-		if (id == null) {
-			if (data.id != null)
-				return false;
-		} else if (!id.equals(data.id))
 			return false;
 		return true;
 	}
