@@ -6,15 +6,17 @@ import org.springframework.web.servlet.config.annotation.DefaultServletHandlerCo
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Controller
-public class MainController  extends WebMvcConfigurerAdapter {
+public class MainController extends WebMvcConfigurerAdapter {
+
+	private static final String VIEW_NAME = "index";
 
 	@RequestMapping("/")
 	public String greeting() {
-		return "index";
+		return VIEW_NAME;
 	}
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
-	 }
+	}
 }
