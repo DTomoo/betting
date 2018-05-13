@@ -9,12 +9,16 @@ import com.dt.betting.db.repository.DataAlreadyExistsException;
 public class BetDataRepository extends InMemoryDataRepository<Bet> {
 
 	public Bet addBet(AddBetDTO addBetDTO) throws DataAlreadyExistsException {
-		
-		if (addBetDTO.getMatch().hasBetOfUser(addBetDTO.getUser())) {
+
+		if (userHasBetOnMatch(addBetDTO)) {
 			throw new DataAlreadyExistsException();
 		}
-		
+
 		return createBet(addBetDTO);
+	}
+
+	private boolean userHasBetOnMatch(AddBetDTO addBetDTO) {
+		return new MatchFunction().userHasBetOnMatch(addBetDTO.getMatch(), addBetDTO.getUser());
 	}
 
 	private Bet createBet(AddBetDTO addBetDTO) {

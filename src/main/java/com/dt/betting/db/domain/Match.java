@@ -97,9 +97,4 @@ public class Match extends DomainObject<Match> {
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
-
-	public boolean hasBetOfUser(User user) {
-		// TODO: check if the user has the bet already
-		return false;
-	}
 }
