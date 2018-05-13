@@ -22,35 +22,6 @@ public class UserDataRepositoryTest {
 
 	}
 
-	@Test
-	public void testAddData() {
-		// given
-		User user = createTestUser();
-		List<User> mockedInnerList = Mockito.mock(List.class);
-		Whitebox.setInternalState(userDataRepository, "innerList", mockedInnerList);
-
-		// when
-		User actualUser = userDataRepository.addData(user);
-
-		// then
-		Assert.assertSame(user, actualUser);
-		Mockito.verify(mockedInnerList, Mockito.times(1)).add(user);
-	}
-
-	@Test
-	public void testListData() {
-		// given
-		userDataRepository.addData(createTestUser());
-
-		List<User> innerList = (List<User>) Whitebox.getInternalState(userDataRepository, "innerList");
-
-		// when
-		List<User> actualUserList = userDataRepository.listData();
-
-		// then
-		Assert.assertNotSame(innerList, actualUserList);
-		Assert.assertEquals(innerList, actualUserList);
-	}
 
 	@Test
 	public void testAddUser() {
