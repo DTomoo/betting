@@ -1,0 +1,8 @@
+tr.myData {
+	background-color: yellow;
+}
+tr.myData td {
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+}

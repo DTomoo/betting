@@ -1,4 +1,4 @@
-package com.dt.betting.db.domain;
+package com.dt.betting.db.repository.inmemory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +11,12 @@ public class IdGenerator {
 
 	private final Map<Class<?>, AtomicLong> ID_BY_CLASS = new HashMap<>();
 
-	public synchronized Long createId(Class<?> clazz) {
+	synchronized Long createId(Class<?> clazz) {
 		ID_BY_CLASS.putIfAbsent(clazz, new AtomicLong(0));
 		return ID_BY_CLASS.get(clazz).getAndIncrement();
+	}
+
+	void reset() {
+		ID_BY_CLASS.clear();
 	}
 }

@@ -1,8 +1,5 @@
 package com.dt.betting.db.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 public class Bet extends DomainObject<Bet> {
 
 	private int score1;
@@ -66,10 +63,5 @@ public class Bet extends DomainObject<Bet> {
 		if (score2 != other.score2)
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

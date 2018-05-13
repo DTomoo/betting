@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
-import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.domain.User;
 
 public class UserDataRepositoryTest {

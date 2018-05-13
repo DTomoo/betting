@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.Bet;
-import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.domain.Match;
 import com.dt.betting.db.domain.User;
 import com.dt.betting.db.repository.DataAlreadyExistsException;

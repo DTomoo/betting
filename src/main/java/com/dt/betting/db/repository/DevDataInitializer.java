@@ -30,6 +30,11 @@ public class DevDataInitializer implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		userDataRepository.clean();
+		teamDataRepository.clean();
+		matchDataRepository.clean();
+		betDataRepository.clean();
+
 		User user1 = createUser("DT");
 		User user2 = createUser("Nooob");
 		User user3 = createUser("Player3");
@@ -38,6 +43,7 @@ public class DevDataInitializer implements InitializingBean {
 		Team team2 = createTeam("Barcelona");
 
 		Match match1 = createMatch(team1, team2, 2, 3);
+		// match1.setEnded(true);
 
 		Bet bet1 = createBet(match1, user2, 1, 3);
 		Bet bet2 = createBet(match1, user3, 5, 2);

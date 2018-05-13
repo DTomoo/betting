@@ -8,5 +8,5 @@ public interface DataRepository<T> {
 
 	public List<T> listData();
 
-	T getById(Long id) throws DataNotExistsInRepositoryException;
+	public T getById(Long id) throws DataNotExistsInRepositoryException;
 }

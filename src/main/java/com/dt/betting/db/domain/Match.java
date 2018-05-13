@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 public class Match extends DomainObject<Match> {
 
 	private Team team1 = new Team();
@@ -91,10 +88,5 @@ public class Match extends DomainObject<Match> {
 		} else if (!team2.getId().equals(other.team2.getId()))
 			return false;
 		return true;
-	}
-
-	@Override
-	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

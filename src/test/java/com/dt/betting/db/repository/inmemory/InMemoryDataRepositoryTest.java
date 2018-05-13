@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.DomainObject;
-import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.repository.DataNotExistsInRepositoryException;
 
 public class InMemoryDataRepositoryTest {

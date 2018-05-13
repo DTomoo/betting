@@ -19,14 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.domain.User;
+import com.dt.betting.db.repository.inmemory.IdGenerator;
 import com.dt.betting.db.repository.inmemory.UserDataRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { IdGenerator.class, UserDataRepository.class, UserController.class })
-public class UserControllerTest {
+public class UserControllerMVCTest {
 
 	@Autowired
 	private WebApplicationContext wac;
@@ -49,8 +49,7 @@ public class UserControllerTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name("viewUsers"))//
 				.andExpect(forwardedUrl("viewUsers"))//
-				.andExpect(model().attribute("users", Arrays.asList()));//
-
+				.andExpect(model().attribute("users", Arrays.asList()));
 	}
 
 	@Test
@@ -61,7 +60,7 @@ public class UserControllerTest {
 		mockMvc.perform(get("/ds/user/add"))
 
 				// then
-				.andExpect(status().isBadRequest());//
+				.andExpect(status().isBadRequest());
 	}
 
 	@Test
@@ -76,8 +75,7 @@ public class UserControllerTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name("viewUsers"))//
 				.andExpect(forwardedUrl("viewUsers"))//
-				.andExpect(model().attribute("users", Arrays.asList(user)));//
-
+				.andExpect(model().attribute("users", Arrays.asList(user)));
 	}
 
 	private User createUser() {

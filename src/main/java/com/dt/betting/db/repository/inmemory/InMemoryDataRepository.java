@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dt.betting.db.domain.DomainObject;
-import com.dt.betting.db.domain.IdGenerator;
 import com.dt.betting.db.repository.DataNotExistsInRepositoryException;
 import com.dt.betting.db.repository.DataRepository;
 
@@ -17,7 +16,7 @@ import com.dt.betting.db.repository.DataRepository;
 class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepository<T> {
 
 	@Autowired
-	protected IdGenerator idGenerator;
+	private IdGenerator idGenerator;
 
 	private List<T> innerList = new ArrayList<>();
 
@@ -42,5 +41,10 @@ class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepositor
 
 	private Stream<T> filterOnId(List<T> data, Long id) {
 		return data.stream().filter(t -> id.equals(t.getId()));
+	}
+
+	public void clean() {
+		innerList.clear();
+		idGenerator.reset();
 	}
 }
