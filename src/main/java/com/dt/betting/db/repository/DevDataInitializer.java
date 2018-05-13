@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.dt.betting.db.domain.Bet;
 import com.dt.betting.db.domain.Match;
 import com.dt.betting.db.domain.Team;
 import com.dt.betting.db.domain.User;
+import com.dt.betting.db.repository.inmemory.AddBetDTO;
+import com.dt.betting.db.repository.inmemory.BetDataRepository;
 import com.dt.betting.db.repository.inmemory.MatchDataRepository;
 import com.dt.betting.db.repository.inmemory.TeamDataRepository;
 import com.dt.betting.db.repository.inmemory.UserDataRepository;
@@ -22,6 +25,8 @@ public class DevDataInitializer implements InitializingBean {
 	private TeamDataRepository teamDataRepository;
 	@Autowired
 	private MatchDataRepository matchDataRepository;
+	@Autowired
+	private BetDataRepository betDataRepository;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
@@ -34,6 +39,8 @@ public class DevDataInitializer implements InitializingBean {
 
 		Match match1 = createMatch(team1, team2, 2, 3);
 
+		Bet bet1 = createBet(match1, user2, 1, 3);
+		Bet bet2 = createBet(match1, user3, 5, 2);
 	}
 
 	private User createUser(String userName) {
@@ -50,7 +57,15 @@ public class DevDataInitializer implements InitializingBean {
 		match.setTeam2(team2);
 		match.getGameStatistics().setScore1(score1);
 		match.getGameStatistics().setScore2(score2);
-		matchDataRepository.addData(match);
-		return match;
+		return matchDataRepository.addData(match);
+	}
+
+	private Bet createBet(Match match, User user, int score1, int score2) throws DataAlreadyExistsException {
+		AddBetDTO addBetDTO = new AddBetDTO();
+		addBetDTO.setMatch(match);
+		addBetDTO.setUser(user);
+		addBetDTO.setScore1(score1);
+		addBetDTO.setScore2(score2);
+		return betDataRepository.addBet(addBetDTO);
 	}
 }

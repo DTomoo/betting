@@ -20,7 +20,7 @@ public class TeamDataRepositoryTest {
 	}
 
 	@Test
-	public void testAddUser() {
+	public void testAddTeam() {
 		// given
 		String teamName = "testTeam";
 
