@@ -10,6 +10,7 @@ import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.DomainObject;
 import com.dt.betting.db.domain.IdGenerator;
+import com.dt.betting.db.repository.DataNotExistsInRepositoryException;
 
 public class InMemoryDataRepositoryTest {
 
@@ -49,6 +50,30 @@ public class InMemoryDataRepositoryTest {
 		// then
 		Assert.assertNotSame(innerList, actualObjectList);
 		Assert.assertEquals(innerList, actualObjectList);
+	}
+
+	@Test(expected = DataNotExistsInRepositoryException.class)
+	public void testGetByIdWhenDoesNotFind() throws DataNotExistsInRepositoryException {
+		// given
+
+		// when
+		inMemoryDataRepository.getById(0L);
+
+		// then
+		Assert.fail();
+	}
+
+	@Test
+	public void testGetByIdWhenDoesFind() throws DataNotExistsInRepositoryException {
+		// given
+		TestObject data = new TestObject();
+		inMemoryDataRepository.addData(data);
+
+		// when
+		TestObject actualData = inMemoryDataRepository.getById(0L);
+
+		// then
+		Assert.assertSame(data, actualData);
 	}
 
 	private static class TestObject extends DomainObject<TestObject> {

@@ -7,4 +7,6 @@ public interface DataRepository<T> {
 	public T addData(T data);
 
 	public List<T> listData();
+
+	T getById(Long id) throws DataNotExistsInRepositoryException;
 }
