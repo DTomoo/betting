@@ -37,10 +37,7 @@ public class BettingController {
 		return handleMethod((bettingData) -> {
 
 			bettingData.setUser(userService.getLoggedUser(request));
-
 			bettingData.setMatch(matchRepository.getById(matchId));
-
-			return bettingData;
 		});
 	}
 
@@ -49,16 +46,12 @@ public class BettingController {
 		return handleMethod((bettingData) -> {
 
 			bettingData.setUser(userService.getLoggedUser(request));
-
 			bettingData.setMatch(matchRepository.getById(addBetParam.getMatchId()));
-
 			bettingData.setUserBet(betRepository.addBet(createAddBetDTO(addBetParam, bettingData)));
-
-			return bettingData;
 		});
 	}
 
-	private <T> ModelAndView handleMethod(MethodLogic function) {
+	private ModelAndView handleMethod(MethodLogic function) {
 		BettingDataDTO bettingData = new BettingDataDTO();
 
 		try {
@@ -94,7 +87,7 @@ public class BettingController {
 	}
 
 	private static interface MethodLogic {
-		public BettingDataDTO fillBettingData(BettingDataDTO bettingDataDTO)
+		public void fillBettingData(BettingDataDTO bettingDataDTO)
 				throws DataNotExistsInRepositoryException, UserDoesNotExistsException, DataAlreadyExistsException;
 	}
 }
