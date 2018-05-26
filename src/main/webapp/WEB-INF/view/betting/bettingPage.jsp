@@ -5,6 +5,10 @@
 
 <h1>Betting page</h1>
 
+<div>errorMessages: ${errorMessages}</div>
+<div>match: ${match}</div>
+
+
 <c:if test="${not empty errorMessages}">
 	<ul class="errorMessages">
 		<c:forEach items="${errorMessages}" var="msg">
@@ -77,7 +81,7 @@
 
 						<c:if test="${not empty userBet}">
 							<tr class="myData">
-								<td>${user.name}</td>
+								<td>${userBet.owner.name}</td>
 								<td>${userBet.score1}</td>
 								<td>${userBet.score2}</td>
 							</tr>

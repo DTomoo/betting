@@ -5,6 +5,7 @@ public class Bet extends DomainObject<Bet> {
 	private int score1;
 	private int score2;
 	private User owner;
+	private Long matchId;
 
 	public int getScore1() {
 		return score1;
@@ -30,14 +31,27 @@ public class Bet extends DomainObject<Bet> {
 		this.owner = owner;
 	}
 
-	public boolean equalsOwner(User owner) {
-		return this.owner.equalsId(owner);
+	public Long getMatchId() {
+		return matchId;
+	}
+
+	public void setMatchId(Long matchId) {
+		this.matchId = matchId;
+	}
+
+	public boolean isTheBetOf(User owner) {
+		return this.owner != null && this.owner.equals(owner);
+	}
+
+	public boolean isTheBetOf(Match match) {
+		return this.matchId != null && matchId.equals(match.getId());
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((matchId == null) ? 0 : matchId.hashCode());
 		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
 		result = prime * result + score1;
 		result = prime * result + score2;
@@ -53,6 +67,11 @@ public class Bet extends DomainObject<Bet> {
 		if (getClass() != obj.getClass())
 			return false;
 		Bet other = (Bet) obj;
+		if (matchId == null) {
+			if (other.matchId != null)
+				return false;
+		} else if (!matchId.equals(other.matchId))
+			return false;
 		if (owner == null) {
 			if (other.owner != null)
 				return false;

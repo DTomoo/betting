@@ -9,6 +9,6 @@ class MatchFunction {
 		if (match == null || user == null) {
 			return false;
 		}
-		return match.getBets().stream().filter(b -> b.equalsOwner(user)).findFirst().isPresent();
+		return match.getBets().stream().filter(b -> b.isTheBetOf(user)).findFirst().isPresent();
 	}
 }

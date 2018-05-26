@@ -79,7 +79,7 @@ public class BettingControllerMVCTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name(EXPECTED_VIEW_NAME))//
 				.andExpect(forwardedUrl(EXPECTED_VIEW_NAME))//
-				.andExpect(model().attributeExists("match", "user", "otherBets", "errorMessages"))//
+				.andExpect(model().attributeExists("match", "otherBets", "errorMessages"))//
 				.andExpect(model().attribute("errorMessages", Matchers.empty()))//
 				.andExpect(model().attributeDoesNotExist("userBet"));
 	}
@@ -95,7 +95,7 @@ public class BettingControllerMVCTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name(EXPECTED_VIEW_NAME))//
 				.andExpect(forwardedUrl(EXPECTED_VIEW_NAME))//
-				.andExpect(model().attributeExists("user", "otherBets", "errorMessages"))//
+				.andExpect(model().attributeExists("otherBets", "errorMessages"))//
 				.andExpect(model().attribute("errorMessages",
 						Matchers.contains("The requested data does not exist in the repository.")))//
 				.andExpect(model().attributeDoesNotExist("match", "userBet"));
@@ -116,7 +116,7 @@ public class BettingControllerMVCTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name(EXPECTED_VIEW_NAME))//
 				.andExpect(forwardedUrl(EXPECTED_VIEW_NAME))//
-				.andExpect(model().attributeExists("match", "user", "userBet", "otherBets", "errorMessages"))//
+				.andExpect(model().attributeExists("match", "userBet", "otherBets", "errorMessages"))//
 				.andExpect(model().attribute("userBet", Matchers.hasProperty("owner", Matchers.is(loggedUser))))//
 				.andExpect(model().attribute("userBet", Matchers.hasProperty("score1", Matchers.is(2))))//
 				.andExpect(model().attribute("userBet", Matchers.hasProperty("score2", Matchers.is(3))))//
@@ -137,7 +137,7 @@ public class BettingControllerMVCTest {
 				.andExpect(status().isOk())//
 				.andExpect(view().name(EXPECTED_VIEW_NAME))//
 				.andExpect(forwardedUrl(EXPECTED_VIEW_NAME))//
-				.andExpect(model().attributeExists("user", "otherBets", "errorMessages"))//
+				.andExpect(model().attributeExists("otherBets", "errorMessages"))//
 				.andExpect(model().attribute("errorMessages",
 						Matchers.contains("The requested data does not exist in the repository.")))//
 				.andExpect(model().attributeDoesNotExist("match", "userBet"));

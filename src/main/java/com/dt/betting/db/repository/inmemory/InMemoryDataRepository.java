@@ -40,6 +40,9 @@ class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepositor
 	}
 
 	private Stream<T> filterOnId(List<T> data, Long id) {
+		if (id == null) {
+			return Stream.empty();
+		}
 		return data.stream().filter(t -> id.equals(t.getId()));
 	}
 

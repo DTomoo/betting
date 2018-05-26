@@ -9,64 +9,43 @@ import com.dt.betting.db.domain.User;
 
 public class BettingDataDTO {
 
-	private User user;
 	private Match match;
 	private Bet userBet;
 	private List<Bet> otherBets = new ArrayList<>();
 	private List<String> errorMessages = new ArrayList<>();
 
-	private void divideBets() {
-		if (match != null) {
-			for (Bet bet : match.getBets()) {
-				if (bet.equalsOwner(user)) {
-					userBet = bet;
-				} else {
-					otherBets.add(bet);
-				}
-			}
+	private void setBets(List<Bet> bets, User myUser) {
+		for (Bet bet : bets) {
+			addBet(bet, myUser);
 		}
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-		divideBets();
-	}
-
-	public Match getMatch() {
-		return match;
-	}
-
-	public void setMatch(Match match) {
-		this.match = match;
-		divideBets();
+	private void addBet(Bet bet, User myUser) {
+		if (bet.isTheBetOf(myUser)) {
+			userBet = bet;
+		} else {
+			otherBets.add(bet);
+		}
 	}
 
 	public Bet getUserBet() {
 		return userBet;
 	}
 
-	public void setUserBet(Bet userBet) {
-		this.userBet = userBet;
-	}
-
 	public List<Bet> getOtherBets() {
 		return otherBets;
 	}
 
-	public void addOtherBet(Bet bet) {
-		otherBets.add(bet);
+	public Match getMatch() {
+		return match;
 	}
 
-	public void addErrorMsg(String msg) {
-		errorMessages.add(msg);
-	}
+	public void setMatch(Match match, User myUser) {
+		this.match = match;
 
-	public void setOtherBets(List<Bet> otherBets) {
-		this.otherBets = otherBets;
+		otherBets.clear();
+		userBet = null;
+		setBets(match.getBets(), myUser);
 	}
 
 	public List<String> getErrorMessages() {
@@ -75,5 +54,9 @@ public class BettingDataDTO {
 
 	public void setErrorMessages(List<String> errorMessages) {
 		this.errorMessages = errorMessages;
+	}
+
+	public void addErrorMsg(String msg) {
+		errorMessages.add(msg);
 	}
 }

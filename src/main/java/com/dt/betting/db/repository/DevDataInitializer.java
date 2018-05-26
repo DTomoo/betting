@@ -9,7 +9,6 @@ import com.dt.betting.db.domain.Bet;
 import com.dt.betting.db.domain.Match;
 import com.dt.betting.db.domain.Team;
 import com.dt.betting.db.domain.User;
-import com.dt.betting.db.repository.inmemory.AddBetDTO;
 import com.dt.betting.db.repository.inmemory.BetDataRepository;
 import com.dt.betting.db.repository.inmemory.MatchDataRepository;
 import com.dt.betting.db.repository.inmemory.TeamDataRepository;
@@ -67,11 +66,12 @@ public class DevDataInitializer implements InitializingBean {
 	}
 
 	private Bet createBet(Match match, User user, int score1, int score2) throws DataAlreadyExistsException {
-		AddBetDTO addBetDTO = new AddBetDTO();
-		addBetDTO.setMatch(match);
-		addBetDTO.setUser(user);
-		addBetDTO.setScore1(score1);
-		addBetDTO.setScore2(score2);
-		return betDataRepository.addBet(addBetDTO);
+		Bet bet = new Bet();
+		match.getBets().add(bet);
+		bet.setMatchId(match.getId());
+		bet.setOwner(user);
+		bet.setScore1(score1);
+		bet.setScore2(score2);
+		return betDataRepository.addBet(bet);
 	}
 }

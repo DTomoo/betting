@@ -6,7 +6,7 @@ import java.util.List;
 public class User extends DomainObject<User> {
 
 	private String name = "";
-	private List<Bet> bets = new ArrayList<>();
+	private List<Long> betIds = new ArrayList<>();
 
 	public String getName() {
 		return name;
@@ -16,8 +16,8 @@ public class User extends DomainObject<User> {
 		this.name = name;
 	}
 
-	public List<Bet> getBets() {
-		return bets;
+	public List<Long> getBetIds() {
+		return betIds;
 	}
 
 	@Override
