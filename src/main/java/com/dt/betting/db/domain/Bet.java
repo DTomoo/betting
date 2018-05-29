@@ -1,11 +1,14 @@
 package com.dt.betting.db.domain;
 
+import java.time.LocalDateTime;
+
 public class Bet extends DomainObject<Bet> {
 
 	private int score1;
 	private int score2;
 	private User owner;
 	private Long matchId;
+	private LocalDateTime timeStamp;
 
 	public int getScore1() {
 		return score1;
@@ -39,6 +42,10 @@ public class Bet extends DomainObject<Bet> {
 		this.matchId = matchId;
 	}
 
+	public boolean isTheBetOfUser(Long userId) {
+		return userId != null && userId.equals(this.owner.getId());
+	}
+
 	public boolean isTheBetOf(User owner) {
 		return this.owner != null && this.owner.equals(owner);
 	}
@@ -47,14 +54,24 @@ public class Bet extends DomainObject<Bet> {
 		return this.matchId != null && matchId.equals(match.getId());
 	}
 
+	public String getShortText() {
+		return score1 + " - " + score2;
+	}
+
+	public LocalDateTime getTimeStamp() {
+		return timeStamp;
+	}
+
+	public void setTimeStamp(LocalDateTime timeStamp) {
+		this.timeStamp = timeStamp;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((matchId == null) ? 0 : matchId.hashCode());
-		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-		result = prime * result + score1;
-		result = prime * result + score2;
+		result = prime * result + ((owner == null || owner.getId() == null) ? 0 : owner.getId().hashCode());
 		return result;
 	}
 
@@ -75,11 +92,7 @@ public class Bet extends DomainObject<Bet> {
 		if (owner == null) {
 			if (other.owner != null)
 				return false;
-		} else if (!owner.equals(other.owner))
-			return false;
-		if (score1 != other.score1)
-			return false;
-		if (score2 != other.score2)
+		} else if (!owner.getId().equals(other.owner.getId()))
 			return false;
 		return true;
 	}

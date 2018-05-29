@@ -7,6 +7,8 @@ public class User extends DomainObject<User> {
 
 	private String name = "";
 	private List<Long> betIds = new ArrayList<>();
+	private boolean admin;
+	private int scores;
 
 	public String getName() {
 		return name;
@@ -18,6 +20,22 @@ public class User extends DomainObject<User> {
 
 	public List<Long> getBetIds() {
 		return betIds;
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+	}
+
+	public boolean isAdmin() {
+		return admin;
+	}
+
+	public int getScores() {
+		return scores;
+	}
+
+	public void setScores(int scores) {
+		this.scores = scores;
 	}
 
 	@Override

@@ -38,6 +38,10 @@ class InMemoryDataRepository<T extends DomainObject<T>> implements DataRepositor
 		Optional<T> result = filterOnId(innerList, id).findFirst();
 		return result.orElseThrow(DataNotExistsInRepositoryException::new);
 	}
+	
+	@Override
+	public void update(T data) {
+	}
 
 	private Stream<T> filterOnId(List<T> data, Long id) {
 		if (id == null) {

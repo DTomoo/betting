@@ -8,9 +8,9 @@ public class Match extends DomainObject<Match> {
 
 	private Team team1 = new Team();
 	private Team team2 = new Team();
-	private LocalDateTime localDateTime = LocalDateTime.now();
-	private boolean ended;
+	private LocalDateTime dateTime = LocalDateTime.now();
 	private GameStatistics gameStatistics = new GameStatistics();
+	private MatchStatus status = MatchStatus.NEW;
 	private final List<Bet> bets = new ArrayList<>();
 
 	public Team getTeam1() {
@@ -29,20 +29,12 @@ public class Match extends DomainObject<Match> {
 		this.team2 = team2;
 	}
 
-	public LocalDateTime getLocalDateTime() {
-		return localDateTime;
+	public LocalDateTime getDateTime() {
+		return dateTime;
 	}
 
-	public void setLocalDateTime(LocalDateTime localDateTime) {
-		this.localDateTime = localDateTime;
-	}
-
-	public boolean isEnded() {
-		return ended;
-	}
-
-	public void setEnded(boolean ended) {
-		this.ended = ended;
+	public void setDateTime(LocalDateTime dateTime) {
+		this.dateTime = dateTime;
 	}
 
 	public GameStatistics getGameStatistics() {
@@ -53,11 +45,23 @@ public class Match extends DomainObject<Match> {
 		return bets;
 	}
 
+	public MatchStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(MatchStatus status) {
+		this.status = status;
+	}
+
+	public String getName() {
+		return team1.getName() + " - " + team2.getName();
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((localDateTime == null) ? 0 : localDateTime.hashCode());
+		result = prime * result + ((dateTime == null) ? 0 : dateTime.hashCode());
 		result = prime * result + ((team1.getId() == null) ? 0 : team1.getId().hashCode());
 		result = prime * result + ((team2.getId() == null) ? 0 : team2.getId().hashCode());
 		return result;
@@ -72,10 +76,10 @@ public class Match extends DomainObject<Match> {
 		if (getClass() != obj.getClass())
 			return false;
 		Match other = (Match) obj;
-		if (localDateTime == null) {
-			if (other.localDateTime != null)
+		if (dateTime == null) {
+			if (other.dateTime != null)
 				return false;
-		} else if (!localDateTime.equals(other.localDateTime))
+		} else if (!dateTime.equals(other.dateTime))
 			return false;
 		if (team1.getId() == null) {
 			if (other.team1.getId() != null)

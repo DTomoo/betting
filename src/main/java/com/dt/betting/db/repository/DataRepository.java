@@ -9,4 +9,6 @@ public interface DataRepository<T> {
 	public List<T> listData();
 
 	public T getById(Long id) throws DataNotExistsInRepositoryException;
+
+	public void update(T data);
 }

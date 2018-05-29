@@ -20,4 +20,9 @@ public class GameStatistics {
 	public void setScore2(int score2) {
 		this.score2 = score2;
 	}
+
+	@Override
+	public String toString() {
+		return score1 + " - " + score2;
+	}
 }
