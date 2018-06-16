@@ -20,7 +20,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
                 .and()
             .formLogin()
                 .loginPage("/login")
@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         List<UserDetails> users = new ArrayList<>();
         users.add(user("NooobAdmin","hoppacska5767", "ADMIN"));
         users.add(user("NooobUser","hoppacska5767", "USER"));
+        users.add(user("Janos","hoppacska5744", "USER"));
         return new InMemoryUserDetailsManager(users);
     }
     
