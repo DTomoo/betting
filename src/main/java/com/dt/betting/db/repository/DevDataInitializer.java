@@ -71,7 +71,7 @@ public class DevDataInitializer implements InitializingBean {
 			Team svajc = createTeam(championship, "Svájc");
 			group1.getTeams().addAll(Arrays.asList(franciao, romania, albania, svajc));
 
-			Match match = createMatchWithResult(group1, franciao, romania, 2, 1); // addMatchToGroup(group1, franciao, romania);
+			Match match = addMatchToGroup(group1, franciao, romania); //createMatchWithResult(group1, franciao, romania, 2, 1); // addMatchToGroup(group1, franciao, romania);
 			createUserBet(match, karesz, true, 2, 0, 2, 0, franciao.getId(), 2);
 
 			match = createMatchWithResult(group1, albania, svajc, 0, 1);
@@ -281,8 +281,8 @@ public class DevDataInitializer implements InitializingBean {
 		result.setMatchId(match.getId());
 		result.putBetPiece(new WinnerBetPiece(teamId));
 		match.setResult(result);
-		match.setStatus(MatchStatus.FINISHED);
-		// match.setStatus(MatchStatus.values()[(int) (Math.random() * 4)]);
+//		match.setStatus(MatchStatus.FINISHED);
+		 match.setStatus(MatchStatus.values()[(int) (Math.random() * 4)]);
 
 		result = betDataRepository.addBet(result);
 		return result;
