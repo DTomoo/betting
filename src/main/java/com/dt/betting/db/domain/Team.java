@@ -2,14 +2,14 @@ package com.dt.betting.db.domain;
 
 public class Team extends DomainObject<Team> {
 
-	private String name = "?";
+	private Long teamType;
 
-	public String getName() {
-		return name;
+	public Long getTeamType() {
+		return teamType;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTeamType(Long teamType) {
+		this.teamType = teamType;
 	}
 
 	@Override

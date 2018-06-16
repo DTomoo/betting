@@ -5,27 +5,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dt.betting.controller.BaseDTO;
-import com.dt.betting.db.domain.GameStatistics;
 import com.dt.betting.db.domain.MatchStatus;
 import com.dt.betting.db.domain.Team;
+import com.dt.betting.db.domain.bet.BetPieceType;
 
 public class MatchDataDTO extends BaseDTO {
 
-	private Long matchId;
+	private long id;
+	private long groupId;
 	private Team team1;
 	private Team team2;
 	private LocalDateTime dateTime;
-	private GameStatistics gameStatistics;
 	private MatchStatus status;
+	private BetDTO result;
 	private BetDTO userBet;
 	private List<BetDTO> otherBets = new ArrayList<>();
+	private List<BetPieceType> possibleBetPieces;
 
-	public Long getMatchId() {
-		return matchId;
+	public long getId() {
+		return id;
 	}
 
-	public void setMatchId(Long matchId) {
-		this.matchId = matchId;
+	public void setId(long matchId) {
+		this.id = matchId;
+	}
+
+	public long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(long groupId) {
+		this.groupId = groupId;
 	}
 
 	public List<BetDTO> getOtherBets() {
@@ -64,20 +74,28 @@ public class MatchDataDTO extends BaseDTO {
 		this.status = status;
 	}
 
-	public GameStatistics getGameStatistics() {
-		return gameStatistics;
-	}
-
-	void setGameStatistics(GameStatistics gameStatistics) {
-		this.gameStatistics = gameStatistics;
-	}
-
 	public BetDTO getUserBet() {
 		return userBet;
 	}
 
 	void setUserBet(BetDTO userBet) {
 		this.userBet = userBet;
+	}
+
+	public BetDTO getResult() {
+		return result;
+	}
+
+	public void setResult(BetDTO result) {
+		this.result = result;
+	}
+
+	public List<BetPieceType> getPossibleBetPieces() {
+		return possibleBetPieces;
+	}
+
+	public void setPossibleBetPieces(List<BetPieceType> possibleBetPieces) {
+		this.possibleBetPieces = possibleBetPieces;
 	}
 
 }

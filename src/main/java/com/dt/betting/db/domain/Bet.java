@@ -1,29 +1,35 @@
 package com.dt.betting.db.domain;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.dt.betting.db.domain.bet.BetPiece;
+import com.dt.betting.db.domain.bet.BetPieceType;
+import com.dt.betting.db.domain.bet.FinalResultBetPiece;
+import com.dt.betting.db.domain.bet.ScoreDifferenceBetPiece;
+import com.dt.betting.db.domain.bet.ScoreGuestBetPiece;
+import com.dt.betting.db.domain.bet.ScoreHomeBetPiece;
+import com.dt.betting.db.domain.bet.ScoreSummaryBetPiece;
 
 public class Bet extends DomainObject<Bet> {
 
-	private int score1;
-	private int score2;
 	private User owner;
 	private Long matchId;
 	private LocalDateTime timeStamp;
+	private Map<BetPieceType, BetPiece<?>> betPiecesByType = new HashMap<>();
+	private boolean joker;
+	private long score;
 
-	public int getScore1() {
-		return score1;
+	public Bet() {
 	}
 
-	public void setScore1(int score1) {
-		this.score1 = score1;
-	}
-
-	public int getScore2() {
-		return score2;
-	}
-
-	public void setScore2(int score2) {
-		this.score2 = score2;
+	public Bet(long score1, long score2) {
+		putBetPiece(new ScoreHomeBetPiece(score1));
+		putBetPiece(new ScoreGuestBetPiece(score2));
+		putBetPiece(new FinalResultBetPiece(score1, score2));
+		putBetPiece(new ScoreDifferenceBetPiece(Math.abs(score1 - score2)));
+		putBetPiece(new ScoreSummaryBetPiece(score1 + score2));
 	}
 
 	public User getOwner() {
@@ -55,7 +61,25 @@ public class Bet extends DomainObject<Bet> {
 	}
 
 	public String getShortText() {
-		return score1 + " - " + score2;
+		BetPiece<?> betPiece = getBetPiece(BetPieceType.FINAL_RESULT);
+		
+		String text = "X";
+		if (betPiece instanceof FinalResultBetPiece) {
+			text = ((FinalResultBetPiece)betPiece).getValue();
+		}
+		return text;
+	}
+
+	public BetPiece<?> getBetPiece(BetPieceType betPieceType) {
+		return betPiecesByType.get(betPieceType);
+	}
+
+	public void putBetPiece(BetPiece<?> betPiece) {
+		betPiecesByType.put(betPiece.getType(), betPiece);
+	}
+
+	public Map<BetPieceType, BetPiece<?>> getBetPiecesByType() {
+		return betPiecesByType;
 	}
 
 	public LocalDateTime getTimeStamp() {
@@ -65,7 +89,23 @@ public class Bet extends DomainObject<Bet> {
 	public void setTimeStamp(LocalDateTime timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	
+
+	public void setJoker(boolean joker) {
+		this.joker = joker;
+	}
+
+	public boolean isJoker() {
+		return joker;
+	}
+
+	public long getScore() {
+		return score;
+	}
+
+	public void setScore(long score) {
+		this.score = score;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -92,7 +132,7 @@ public class Bet extends DomainObject<Bet> {
 		if (owner == null) {
 			if (other.owner != null)
 				return false;
-		} else if (!owner.getId().equals(other.owner.getId()))
+		} else if (!owner.equals(other.owner))
 			return false;
 		return true;
 	}

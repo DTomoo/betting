@@ -1,37 +1,16 @@
 package com.dt.betting.controller.userbet;
 
-import com.dt.betting.db.domain.Bet;
-import com.dt.betting.db.domain.Match;
+import java.util.Map;
+
+import com.dt.betting.controller.matchdetails.BetStatus;
 
 public class BetDTO {
 
-	private int score1;
-	private int score2;
 	private Long matchId;
 	private String matchName;
-
-	BetDTO(Match match, Bet bet) {
-		this.matchId = match.getId();
-		this.matchName = match.getName();
-		this.score1 = bet.getScore1();
-		this.score2 = bet.getScore2();
-	}
-
-	public int getScore1() {
-		return score1;
-	}
-
-	void setScore1(int score1) {
-		this.score1 = score1;
-	}
-
-	public int getScore2() {
-		return score2;
-	}
-
-	void setScore2(int score2) {
-		this.score2 = score2;
-	}
+	private BetStatus betStatus;
+	private Map<String, String> betPieces;
+	private boolean joker;
 
 	public Long getMatchId() {
 		return matchId;
@@ -49,7 +28,27 @@ public class BetDTO {
 		this.matchName = matchName;
 	}
 
-	public String getShortText() {
-		return score1 + " - " + score2;
+	public BetStatus getBetStatus() {
+		return betStatus;
+	}
+
+	public void setBetStatus(BetStatus betStatus) {
+		this.betStatus = betStatus;
+	}
+
+	public Map<String, String> getBetPieces() {
+		return betPieces;
+	}
+
+	public void setBetPieces(Map<String, String> betPieces) {
+		this.betPieces = betPieces;
+	}
+
+	public void setJoker(boolean joker) {
+		this.joker = joker;
+	}
+
+	public boolean isJoker() {
+		return joker;
 	}
 }

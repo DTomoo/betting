@@ -17,6 +17,9 @@
 		<th>ID</th>
 		<th>Név</th>
 		<th>Pontok</th>
+		<c:if test="${allowNewDataToAdd}">
+			<th></th>
+		</c:if>
 	</thead>
 	<tbody>
 		<c:if test="${!empty users}">
@@ -25,7 +28,9 @@
 					<td>${user.id}</td>
 					<td>${user.name}</td>
 					<td>${user.scores}</td>
-					<td><button user-id="${user.id}" onclick="bettingApp.loadUser(this);">Tippjei</button></td>
+					<c:if test="${allowNewDataToAdd}">
+						<td><button data-user-id="${user.id}" onclick="bettingApp.loadUser(this);">Tippjei</button></td>
+					</c:if>
 				</tr>
 			</c:forEach>
 		</c:if>
@@ -34,10 +39,8 @@
 		<c:if test="${allowNewDataToAdd}">
 			<tr>
 				<td>+</td>
-				<td>
-					<form action="/ds/user/add">
-						<input type="text" name="userName"></input>
-					</form>
+				<td colspan="10">
+					<input type="text" name="userName" onkeyup="bettingApp.addUserOnEnter(event);" onblur="bettingApp.addUser(this);"></input>
 				</td>
 			</tr>
 		</c:if>

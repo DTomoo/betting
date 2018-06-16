@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.Team;
+import com.dt.betting.db.repository.DataAlreadyExistsException;
 
 public class TeamDataRepositoryTest {
 
@@ -19,7 +20,7 @@ public class TeamDataRepositoryTest {
 	}
 
 	@Test
-	public void testAddTeam() {
+	public void testAddTeam() throws DataAlreadyExistsException {
 		// given
 		String teamName = "testTeam";
 

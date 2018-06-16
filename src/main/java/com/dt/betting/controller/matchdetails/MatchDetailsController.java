@@ -2,8 +2,8 @@ package com.dt.betting.controller.matchdetails;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,21 +15,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dt.betting.controller.BettingAppController;
 import com.dt.betting.db.domain.Bet;
 import com.dt.betting.db.domain.Match;
 import com.dt.betting.db.domain.User;
 import com.dt.betting.db.repository.DataAlreadyExistsException;
 import com.dt.betting.db.repository.DataNotExistsInRepositoryException;
-import com.dt.betting.db.repository.inmemory.BetDataRepository;
 import com.dt.betting.db.repository.inmemory.MatchDataRepository;
-import com.dt.betting.db.repository.inmemory.UserDataRepository;
+import com.dt.betting.score.ScoreCalculator;
 import com.dt.betting.user.UserDoesNotExistsException;
-import com.dt.betting.user.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-public class MatchDetailsController {
+public class MatchDetailsController extends BettingAppController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MatchDetailsController.class);
 
@@ -39,46 +38,36 @@ public class MatchDetailsController {
 	@Autowired
 	private MatchDataRepository matchRepository;
 	@Autowired
-	private BetDataRepository betRepository;
-	@Autowired
-	private UserDataRepository userRepository;
-	@Autowired
-	private UserService userService;
-	@Autowired
 	private MatchDTOConverter matchDTOConverter;
-
-	@RequestMapping("/ds/matchDetails")
-	public ModelAndView displayBettingPage(Long matchId, HttpServletRequest request) {
-		MatchDataDTO bettingDataDTO = getMatchData(matchId, request);
-		return createMAV(bettingDataDTO);
-	}
+	@Autowired
+	private ScoreCalculator scoreCalculator;
 
 	@RequestMapping("/ps/matchDetails")
 	public void psMatchData(Long matchId, HttpServletRequest request, HttpServletResponse response) {
-		MatchDataDTO bettingDataDTO = getMatchData(matchId, request);
+		MatchDataDTO bettingDataDTO = getMatchData(new ArrayList<String>(), matchId, request);
 		sendJsonResponse(bettingDataDTO, response);
 	}
 
-	@RequestMapping("/ds/matchAction/addBet")
-	public ModelAndView addBet(Bet newBet, HttpServletRequest request) {
-		LOGGER.info("Add new bet: " + newBet);
-		MatchDataDTO bettingDataDTO = getMatchData(newBet.getMatchId(), request, saveBet(newBet));
+	@RequestMapping("/ds/matchDetails")
+	public ModelAndView displayBettingPage(Long matchId, HttpServletRequest request) {
+		MatchDataDTO bettingDataDTO = getMatchData(new ArrayList<String>(), matchId, request);
 		return createMAV(bettingDataDTO);
 	}
 
-	@RequestMapping("/ds/matchAction/editBet")
-	public ModelAndView editBet(EditBetParam editParam, HttpServletRequest request) {
-		LOGGER.info("Edit bet:" + editParam);
-		MatchDataDTO bettingDataDTO = getMatchData(editParam.getMatchId(), request, editBet(editParam));
+	public ModelAndView displayBettingPage(List<String> previousMessages, Long matchId, HttpServletRequest request) {
+		MatchDataDTO bettingDataDTO = getMatchData(previousMessages, matchId, request);
 		return createMAV(bettingDataDTO);
 	}
 
-	private MatchDataDTO getMatchData(Long matchId, HttpServletRequest request) {
-		return getMatchData(matchId, request, doNothing());
+	private MatchDataDTO getMatchData(List<String> previousMessages, Long matchId, HttpServletRequest request) {
+		return getMatchData(previousMessages, matchId, request, doNothing());
 	}
 
-	private MatchDataDTO getMatchData(Long matchId, HttpServletRequest request, MatchDataFunction function) {
+	private MatchDataDTO getMatchData(List<String> previousMessages, Long matchId, HttpServletRequest request, MatchDataFunction function) {
 		MatchDataDTO bettingData = new MatchDataDTO();
+		if (previousMessages != null) {
+			bettingData.getErrorMessages().addAll(previousMessages);
+		}
 
 		try {
 			User loggedUser = userService.getLoggedUser(request);
@@ -86,48 +75,19 @@ public class MatchDetailsController {
 
 			function.run(match, loggedUser);
 
+			Bet matchResult = match.getResult();
+			if (matchResult != null) {
+				for (Bet bet : match.getBets()) {
+					bet.setScore(scoreCalculator.calculateScore(match.getPossibleBetPieces(), matchResult, bet));
+				}
+			}
+
 			bettingData = matchDTOConverter.convert(match, loggedUser);
 
 		} catch (DataNotExistsInRepositoryException | UserDoesNotExistsException | DataAlreadyExistsException ex) {
-			bettingData.addErrorMessage(ex.getMessage());
-			LOGGER.error(ex.getMessage());
+			errorHandler(bettingData.getErrorMessages(), ex);
 		}
 		return bettingData;
-	}
-
-	private MatchDataFunction saveBet(Bet newBet) {
-		return (match, myUser) -> {
-			newBet.setOwner(myUser);
-			newBet.setTimeStamp(LocalDateTime.now());
-
-			Bet bet = betRepository.addBet(newBet);
-			match.getBets().add(bet);
-
-			userRepository.update(myUser);
-			matchRepository.update(match);
-		};
-	}
-
-	private MatchDataFunction editBet(EditBetParam editParam) {
-		return (match, myUser) -> {
-			Long userId = Long.valueOf(editParam.getUserId());
-
-			if (myUser.isAdmin() || !userId.equals(myUser.getId())) {
-				LOGGER.error("{} wanted to hack: {}", myUser.getName(), editParam.toString());
-				throw new RuntimeException("Nincs jogod a művelethez!");
-			}
-
-			Optional<Bet> userBet = match.getBets().stream().filter(bet -> bet.isTheBetOfUser(userId)).findFirst();
-			if (userBet.isPresent()) {
-				Bet bet = userBet.get();
-				bet.setScore1(editParam.getScore1());
-				bet.setScore2(editParam.getScore2());
-				bet.setTimeStamp(LocalDateTime.now());
-				betRepository.update(bet);
-			} else {
-				throw new RuntimeException("Nincs még ilyen fogadás rögzítve");
-			}
-		};
 	}
 
 	private MatchDataFunction doNothing() {

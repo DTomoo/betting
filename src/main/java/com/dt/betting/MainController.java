@@ -8,11 +8,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Controller
 public class MainController extends WebMvcConfigurerAdapter {
 
-	private static final String VIEW_NAME = "index";
-
 	@RequestMapping("/")
-	public String greeting() {
-		return VIEW_NAME;
+	public String index() {
+		return "index";
+	}
+
+	@RequestMapping("/home")
+	public String home() {
+		return "home";
 	}
 
 	@Override

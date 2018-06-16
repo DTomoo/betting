@@ -1,30 +1,17 @@
 package com.dt.betting.controller.matchdetails;
 
+import java.util.Map;
+
 import com.dt.betting.db.domain.User;
 
 public class BetDTO {
 
-	private int score1;
-	private int score2;
 	private User owner;
 	private Long matchId;
 	private BetStatus betStatus;
-
-	public int getScore1() {
-		return score1;
-	}
-
-	public void setScore1(int score1) {
-		this.score1 = score1;
-	}
-
-	public int getScore2() {
-		return score2;
-	}
-
-	public void setScore2(int score2) {
-		this.score2 = score2;
-	}
+	private Map<String, String> betPieces;
+	private boolean joker;
+	private long score;
 
 	public User getOwner() {
 		return owner;
@@ -50,7 +37,27 @@ public class BetDTO {
 		this.betStatus = betStatus;
 	}
 
-	public String getShortText() {
-		return score1 + " - " + score2;
+	public Map<String, String> getBetPieces() {
+		return betPieces;
+	}
+
+	public void setBetPieces(Map<String, String> betPieces) {
+		this.betPieces = betPieces;
+	}
+
+	public void setJoker(boolean joker) {
+		this.joker = joker;
+	}
+
+	public boolean isJoker() {
+		return joker;
+	}
+	
+	public void setScore(long score) {
+		this.score = score;
+	}
+	
+	public long getScore() {
+		return score;
 	}
 }

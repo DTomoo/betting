@@ -2,16 +2,22 @@ package com.dt.betting.db.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.dt.betting.db.domain.bet.BetPieceType;
 
 public class Match extends DomainObject<Match> {
 
 	private Team team1 = new Team();
 	private Team team2 = new Team();
 	private LocalDateTime dateTime = LocalDateTime.now();
-	private GameStatistics gameStatistics = new GameStatistics();
 	private MatchStatus status = MatchStatus.NEW;
 	private final List<Bet> bets = new ArrayList<>();
+	private Bet result;
+	private Long groupId;
+	private List<BetPieceType> possibleBetPieces = Arrays.asList(BetPieceType.SCORE_HOME, BetPieceType.SCORE_GUEST, BetPieceType.FINAL_RESULT,
+			BetPieceType.WINNER, BetPieceType.SCORE_DIFFERENCE);
 
 	public Team getTeam1() {
 		return team1;
@@ -29,16 +35,20 @@ public class Match extends DomainObject<Match> {
 		this.team2 = team2;
 	}
 
+	public Bet getResult() {
+		return result;
+	}
+
+	public void setResult(Bet result) {
+		this.result = result;
+	}
+
 	public LocalDateTime getDateTime() {
 		return dateTime;
 	}
 
 	public void setDateTime(LocalDateTime dateTime) {
 		this.dateTime = dateTime;
-	}
-
-	public GameStatistics getGameStatistics() {
-		return gameStatistics;
 	}
 
 	public List<Bet> getBets() {
@@ -53,17 +63,36 @@ public class Match extends DomainObject<Match> {
 		this.status = status;
 	}
 
+	public Long getGroupId() {
+		return groupId;
+	}
+
+	public void setGroupId(Long groupId) {
+		this.groupId = groupId;
+	}
+
 	public String getName() {
 		return team1.getName() + " - " + team2.getName();
+	}
+
+	public boolean equalsTeamIds(Long teamId1, Long teamId2) {
+		if (team1 == null || team2 == null) {
+			return false;
+		}
+		return (team1.equalsId(teamId1) && team2.equalsId(teamId2)) || (team1.equalsId(teamId2) && team2.equalsId(teamId1));
+	}
+
+	public List<BetPieceType> getPossibleBetPieces() {
+		return possibleBetPieces;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((dateTime == null) ? 0 : dateTime.hashCode());
-		result = prime * result + ((team1.getId() == null) ? 0 : team1.getId().hashCode());
-		result = prime * result + ((team2.getId() == null) ? 0 : team2.getId().hashCode());
+		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
+		result = prime * result + ((team1 == null) ? 0 : team1.hashCode());
+		result = prime * result + ((team2 == null) ? 0 : team2.hashCode());
 		return result;
 	}
 
@@ -76,21 +105,14 @@ public class Match extends DomainObject<Match> {
 		if (getClass() != obj.getClass())
 			return false;
 		Match other = (Match) obj;
-		if (dateTime == null) {
-			if (other.dateTime != null)
+		if (groupId == null) {
+			if (other.groupId != null)
 				return false;
-		} else if (!dateTime.equals(other.dateTime))
+		} else if (!groupId.equals(other.groupId))
 			return false;
-		if (team1.getId() == null) {
-			if (other.team1.getId() != null)
-				return false;
-		} else if (!team1.getId().equals(other.team1.getId()))
+		if (team1 == null || other.team1 == null || team2 == null || other.team2 == null) {
 			return false;
-		if (team2.getId() == null) {
-			if (other.team2.getId() != null)
-				return false;
-		} else if (!team2.getId().equals(other.team2.getId()))
-			return false;
-		return true;
+		}
+		return equalsTeamIds(other.getTeam1().getId(), other.getTeam2().getId());
 	}
 }

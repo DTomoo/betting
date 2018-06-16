@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.dt.betting.db.domain.DomainObject;
+import com.dt.betting.db.repository.DataAlreadyExistsException;
 import com.dt.betting.db.repository.DataNotExistsInRepositoryException;
 
 public class InMemoryDataRepositoryTest {
@@ -22,7 +23,7 @@ public class InMemoryDataRepositoryTest {
 	}
 
 	@Test
-	public void testAddData() {
+	public void testAddData() throws DataAlreadyExistsException {
 		// given
 		TestObject testObject = new TestObject();
 		List<TestObject> mockedInnerList = Mockito.mock(List.class);
@@ -37,7 +38,7 @@ public class InMemoryDataRepositoryTest {
 	}
 
 	@Test
-	public void testListData() {
+	public void testListData() throws DataAlreadyExistsException {
 		// given
 		inMemoryDataRepository.addData(new TestObject());
 
@@ -47,7 +48,6 @@ public class InMemoryDataRepositoryTest {
 		List<TestObject> actualObjectList = inMemoryDataRepository.listData();
 
 		// then
-		Assert.assertNotSame(innerList, actualObjectList);
 		Assert.assertEquals(innerList, actualObjectList);
 	}
 
@@ -63,7 +63,7 @@ public class InMemoryDataRepositoryTest {
 	}
 
 	@Test
-	public void testGetByIdWhenDoesFind() throws DataNotExistsInRepositoryException {
+	public void testGetByIdWhenDoesFind() throws DataNotExistsInRepositoryException, DataAlreadyExistsException {
 		// given
 		TestObject data = new TestObject();
 		inMemoryDataRepository.addData(data);

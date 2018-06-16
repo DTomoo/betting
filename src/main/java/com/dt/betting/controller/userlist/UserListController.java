@@ -2,28 +2,31 @@ package com.dt.betting.controller.userlist;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dt.betting.controller.BettingAppController;
+import com.dt.betting.controller.InsufficientRightException;
+import com.dt.betting.db.domain.Match;
+import com.dt.betting.db.domain.MatchStatus;
 import com.dt.betting.db.domain.User;
+import com.dt.betting.db.repository.DataAlreadyExistsException;
+import com.dt.betting.db.repository.inmemory.MatchDataRepository;
 import com.dt.betting.db.repository.inmemory.UserDataRepository;
+import com.dt.betting.score.ScoreCalculator;
 import com.dt.betting.user.UserDoesNotExistsException;
-import com.dt.betting.user.UserService;
 
 @Controller
-public class UserListController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserListController.class);
+public class UserListController extends BettingAppController {
 
 	private static final String VIEW_NAME = "userListPage";
 
@@ -34,15 +37,17 @@ public class UserListController {
 	@Autowired
 	private UserDataRepository userDataRepository;
 	@Autowired
-	private UserService userService;
+	private MatchDataRepository matchDataRepository;
+	@Autowired
+	private ScoreCalculator scoreCalculator;
 
-	@RequestMapping(method = RequestMethod.POST, path = "/ds/user/add")
+	@RequestMapping(path = "/ds/user/add")
 	public ModelAndView addUser(@RequestParam("userName") String userName, HttpServletRequest request) {
 		return handleMethod(addUser(userName), request);
 	}
 
 	@RequestMapping("/ds/users")
-	public ModelAndView display(HttpServletRequest request) throws UserDoesNotExistsException {
+	public ModelAndView display(HttpServletRequest request) {
 		return handleMethod(doNothing(), request);
 	}
 
@@ -58,9 +63,8 @@ public class UserListController {
 			listData = userDataRepository.listData();
 			calculateUserScores(listData);
 
-		} catch (UserDoesNotExistsException ex) {
-			errorMessages.add(ex.getMessage());
-			LOGGER.error(ex.getMessage());
+		} catch (UserDoesNotExistsException | DataAlreadyExistsException | InsufficientRightException ex) {
+			errorHandler(errorMessages, ex);
 		}
 		return createMAV(loggedUser.isAdmin(), listData, errorMessages);
 	}
@@ -69,10 +73,9 @@ public class UserListController {
 		return loggedUser -> {
 
 			if (!loggedUser.isAdmin()) {
-				throw new RuntimeException();
+				throw new InsufficientRightException();
 			}
 			userDataRepository.addUser(userName);
-
 		};
 	}
 
@@ -81,12 +84,27 @@ public class UserListController {
 		};
 	}
 
-	private void calculateUserScores(List<User> listData) {
-		// TODO: calculate the real values
-		Random rnd = new Random(0);
-		for (User user : listData) {
-			user.setScores(rnd.nextInt(10));
-		}
+	private void calculateUserScores(List<User> users) {
+		List<Match> matches = matchDataRepository.listData();
+		Map<Long, AtomicLong> scores = users.stream().collect(Collectors.toMap(User::getId, u -> new AtomicLong(0)));
+		
+		
+		matches
+			.stream()
+			.filter(match -> match.getStatus() != MatchStatus.NEW && match.getResult() != null)
+			.forEach(match -> {
+				match.getBets().stream().forEach(userBet -> {
+				
+					long score = scoreCalculator.calculateScore(match.getPossibleBetPieces(), match.getResult(), userBet);
+					scores.get(userBet.getOwner().getId()).addAndGet(score);
+				
+				});
+			});
+
+		users.stream().forEach(user -> {
+			user.setScores(scores.get(user.getId()).longValue());
+		});
+
 	}
 
 	public ModelAndView createMAV(boolean allowNewDataToAdd, List<User> listData, List<String> errorMessages) {
@@ -98,6 +116,6 @@ public class UserListController {
 	}
 
 	private static interface UserExtraFunction {
-		public void run(User loggedUser);
+		public void run(User loggedUser) throws DataAlreadyExistsException, InsufficientRightException;
 	}
 }

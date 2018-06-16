@@ -5,18 +5,9 @@ import java.util.List;
 
 public class User extends DomainObject<User> {
 
-	private String name = "";
 	private List<Long> betIds = new ArrayList<>();
 	private boolean admin;
-	private int scores;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+	private long scores;
 
 	public List<Long> getBetIds() {
 		return betIds;
@@ -30,11 +21,11 @@ public class User extends DomainObject<User> {
 		return admin;
 	}
 
-	public int getScores() {
+	public long getScores() {
 		return scores;
 	}
 
-	public void setScores(int scores) {
+	public void setScores(long scores) {
 		this.scores = scores;
 	}
 

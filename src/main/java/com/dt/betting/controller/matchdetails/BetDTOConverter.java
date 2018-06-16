@@ -10,13 +10,19 @@ public class BetDTOConverter {
 
 	@Autowired
 	private BetStatusCalculator betStatusCalculator;
+	@Autowired
+	private BetPieceConverter betPieceConverter;
 
 	public BetDTO convert(Bet source) {
+		if (source == null) {
+			return null;
+		}
 		BetDTO target = new BetDTO();
 		target.setMatchId(source.getMatchId());
 		target.setOwner(source.getOwner());
-		target.setScore1(source.getScore1());
-		target.setScore2(source.getScore2());
+		target.setJoker(source.isJoker());
+		target.setScore(source.getScore());
+		target.setBetPieces(betPieceConverter.convert(source.getBetPiecesByType()));
 		target.setBetStatus(betStatusCalculator.getStatusOf(source));
 		return target;
 	}
