@@ -284,21 +284,13 @@ var bettingApp = (function() {
 		
 
 
-		
-		function toggleAdmin() {
-			ajaxCall("/ps/admin/toggle", "POST", null, function() {
-				refreshPage();
-			});
-		}
-
 		return {
 			initDropdownGroup : initDropdownGroup,
 			pageNav : {
 				nextPage : nextPage,
 				nextPageWithoutHistory : nextPageWithoutHistory,
 				goBack : goBack
-			},
-			toggleAdmin : toggleAdmin
+			}
 		}
 	}());
 	

@@ -25,7 +25,6 @@
 				<li><a data-toggle="tab" href="#menu0" data-url="/ds/championship">Bajnokságok</a></li>
 				<li><a data-toggle="tab" href="#menu1" data-url="/ds/users">Fogadók</a></li>
 				<li><button id="backButton" onclick="bettingApp.guiControls.pageNav.goBack(event)" style="display: none" type="button" class="btn btn-info">Vissza az előző oldalra</button></li>
-				<li><button onclick="bettingApp.guiControls.toggleAdmin()" type="button" class="btn btn-danger">Admin!</button></li>
 				<li class="logout"><button onclick="location.href='/login?logout'" type="button" class="btn btn-danger">Kijelentkezés</button></li>
 			</ul>
 
